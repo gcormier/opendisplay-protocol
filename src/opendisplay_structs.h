@@ -80,6 +80,11 @@
  *       Backward-compatible enum addition. Firmware treats the panel type as
  *       identifying the board (as with 3002-3004) and drives the M5Paper's
  *       main-power hold and external-power enable itself.
+ *     - SensorType 8: OD_SENSOR_TYPE_PCF8563 (PCF8563 / BM8563 RTC, I2C 0x51).
+ *       Together with OD_DEVICE_FLAG_PWR_LATCH, deep sleep arms the RTC and
+ *       releases the latch; the RTC INT powers the board back on (M5Paper).
+ *       Backward-compatible enum addition; publishes no MSD data. (Values 6-7
+ *       are already assigned in Firmware's vendored copy; not yet folded back.)
  *     - Add each payload-layout change here as it lands. On the next version bump,
  *       move these under a new "MAJOR.MINOR (YYYY-MM-DD)" heading.
  *
@@ -789,7 +794,8 @@ enum SensorType {
     OD_SENSOR_TYPE_HUMIDITY    = 2, /**< @doc "generic humidity sensor" */
     OD_SENSOR_TYPE_AXP2101     = 3, /**< @doc "AXP2101 power-management IC" */
     OD_SENSOR_TYPE_SHT40       = 4, /**< @doc "Sensirion SHT40 (I2C); writes 3 LE bytes into MSD dynamic data (21 bits: 0.1C, 0.1% RH)" */
-    OD_SENSOR_TYPE_BQ27220     = 5  /**< @doc "TI BQ27220 fuel gauge (I2C 0x55); voltage in MSD bytes 14-15, one packed dynamic byte (bits 0-6 SOC%, bit7 charging)" */
+    OD_SENSOR_TYPE_BQ27220     = 5, /**< @doc "TI BQ27220 fuel gauge (I2C 0x55); voltage in MSD bytes 14-15, one packed dynamic byte (bits 0-6 SOC%, bit7 charging)" */
+    OD_SENSOR_TYPE_PCF8563     = 8  /**< @doc "NXP PCF8563 / BM8563 RTC (I2C 0x51) as a power-off wake source; with pwr_latch, deep sleep releases the latch and the RTC INT powers the board back on. Publishes no MSD data." */
 };
 
 /** @struct SensorData  @packet 0x23  @repeatable max=4
