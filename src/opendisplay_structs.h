@@ -85,6 +85,11 @@
  *       releases the latch; the RTC INT powers the board back on (M5Paper).
  *       Backward-compatible enum addition; publishes no MSD data. (Values 6-7
  *       are already assigned in Firmware's vendored copy; not yet folded back.)
+ *     - DeviceFlags bit5: OD_DEVICE_FLAG_CHANNEL_SOUNDING (nRF54 firmware family;
+ *       already in config.yaml since 2026-08). DeviceFlags bit6:
+ *       OD_DEVICE_FLAG_NM420_INIT (RockBase NM-EPD-420 low-power init). Firmware
+ *       briefly shipped NM420_INIT as bit5; it accepts bit5 on ESP32-S3 for
+ *       already-provisioned boards. Group comment now reads bit 7 reserved.
  *     - Add each payload-layout change here as it lands. On the next version bump,
  *       move these under a new "MAJOR.MINOR (YYYY-MM-DD)" heading.
  *
@@ -434,12 +439,14 @@ enum ManufacturerId {
 #define OD_COMM_MODE_OEPL              (1u << 1) /* @doc "OEPL (OpenEPaperLink) transfer supported" */
 #define OD_COMM_MODE_WIFI              (1u << 2) /* @doc "WiFi transfer supported" */
 
-/* SystemConfig.device_flags @bits DeviceFlags (bits 5-7 reserved). */
+/* SystemConfig.device_flags @bits DeviceFlags (bit 7 reserved). */
 #define OD_DEVICE_FLAG_PWR_PIN         (1u << 0) /* @doc "device has external power management for the display etc." */
 #define OD_DEVICE_FLAG_XIAO_INIT       (1u << 1) /* @doc "apply Seeed XIAO low-power init" */
 #define OD_DEVICE_FLAG_WS_PP_INIT      (1u << 2) /* @doc "apply Waveshare PhotoPainter low-power init" */
 #define OD_DEVICE_FLAG_PWR_LATCH       (1u << 3) /* @doc "self-holding MOSFET latch on pwr_pin_2; optional long-press shutdown button on pwr_pin_3" */
 #define OD_DEVICE_FLAG_PWR_LATCH_DFF   (1u << 4) /* @doc "74AHC1G79 D-FF latch: pwr_pin_2=D (hold), pwr_pin_3=CP (clock); command 0x0052 releases latch" */
+#define OD_DEVICE_FLAG_CHANNEL_SOUNDING (1u << 5) /* @doc "BLE Channel Sounding (RAS reflector) enabled when the firmware supports it (nRF54 firmware family)" */
+#define OD_DEVICE_FLAG_NM420_INIT      (1u << 6) /* @doc "apply RockBase NM-EPD-420 low-power init: default peripheral and ADC enable pins LOW; hold them LOW in deep sleep" */
 
 /** @struct SystemConfig  @packet 0x01  @required
  *  @doc "Host IC identity, communication capabilities, and power-management pins.
